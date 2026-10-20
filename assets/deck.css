@@ -1,0 +1,95 @@
+@font-face{font-family:"IBM Plex Sans";font-weight:400;font-style:normal;font-display:swap;src:url(fonts/ibm-plex-sans-400.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-weight:500;font-style:normal;font-display:swap;src:url(fonts/ibm-plex-sans-500.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-weight:600;font-style:normal;font-display:swap;src:url(fonts/ibm-plex-sans-600.woff2) format("woff2")}
+@font-face{font-family:"Newsreader";font-weight:500;font-style:normal;font-display:swap;src:url(fonts/newsreader-500.woff2) format("woff2")}
+@font-face{font-family:"Newsreader";font-weight:700;font-style:normal;font-display:swap;src:url(fonts/newsreader-700.woff2) format("woff2")}
+:root{--bg:#f5f6f2;--card:#fff;--ink:#17212b;--mute:#5d6a76;--line:#d9ddd6;--red:#c8102e;--teal:#1f8a7d;--sand:#e9ebe3;--ok:#1f7a4a;--bad:#b3261e;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#10171e;--card:#18222c;--ink:#eef1ee;--mute:#9aa8b4;--line:#2b3946;--red:#ff4d63;--teal:#4cc4b3;--sand:#1f2c38;--ok:#5dd394;--bad:#ff8a80;color-scheme:dark}}
+:root[data-theme=dark]{--bg:#10171e;--card:#18222c;--ink:#eef1ee;--mute:#9aa8b4;--line:#2b3946;--red:#ff4d63;--teal:#4cc4b3;--sand:#1f2c38;--ok:#5dd394;--bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.5 "IBM Plex Sans",system-ui,sans-serif;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--line);font-size:14px;flex-wrap:wrap}
+header b{font:700 19px "Newsreader",Georgia,serif;margin-right:auto}
+button{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer}
+button:hover:not(:disabled){border-color:var(--teal)}button:focus-visible{outline:3px solid var(--teal);outline-offset:2px}button:disabled{cursor:default}
+button.on,button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+#bar{height:4px;background:var(--sand)}#bar i{display:block;height:100%;width:0;background:var(--red);transition:width .3s}
+main{flex:1;overflow-y:auto;padding:24px 18px}
+.s{display:none;max-width:1000px;margin:0 auto}.s.on{display:block}
+h1,h2{font-family:"Newsreader",Georgia,serif;line-height:1.08;margin:0 0 12px;letter-spacing:-.01em}
+h1{font-size:clamp(34px,6vw,58px)}h2{font-size:clamp(27px,4vw,40px)}
+h3{font-size:15px;margin:16px 0 6px;text-transform:uppercase;letter-spacing:.06em;color:var(--mute)}
+p{margin:0 0 10px;max-width:68ch}.mute{color:var(--mute)}.sm{font-size:14px;color:var(--mute)}
+.kick{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--red);font-weight:600;margin-bottom:6px}
+.lead{font-size:18px;color:var(--mute);max-width:70ch}
+.big{font:700 clamp(28px,4.6vw,44px)/1 "Newsreader",Georgia,serif}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin:14px 0}
+.two{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));margin:14px 0;align-items:start}
+.k{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--red);border-radius:8px;padding:12px 14px}
+.k small{display:block;color:var(--mute);font-size:13.5px;margin-top:4px}
+.k .lb{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:4px}
+.k.t{border-left-color:var(--teal)}
+.take{border-left:4px solid var(--red);padding:3px 0 3px 14px;margin-top:14px;font-weight:500;max-width:68ch}
+.take::before{content:"Takeaway  ";font-size:12px;letter-spacing:.08em;color:var(--red);font-weight:600}
+.ctl{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{border-radius:999px;text-align:left}
+.row{display:grid;grid-template-columns:100px 1fr 70px;gap:10px;align-items:center;margin:7px 0;font-size:15px}
+.trk{height:20px;background:var(--sand);border-radius:5px;overflow:hidden}.trk i{display:block;height:100%;background:var(--teal);transition:width .5s}
+.row.hi .trk i{background:var(--red)}.row span:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.tl{position:relative;height:34px;background:var(--sand);border-radius:6px;overflow:hidden;margin:14px 0 4px}
+.tl i{position:absolute;top:0;bottom:0;transition:all .45s}
+.ticks{position:relative;height:18px;font-size:12px;color:var(--mute)}.ticks span{position:absolute}
+.leg{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--mute)}.leg b{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:8px 0}
+.q .a{display:flex;gap:8px;margin-top:6px}.q .why{font-size:14px;margin-top:6px;display:none}.q.done .why{display:block}
+.q.right{border-left:4px solid var(--ok)}.q.wrong{border-left:4px solid var(--bad)}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin:8px 0}
+.cal .h{font-size:12px;color:var(--mute);text-align:center}
+.cal button{padding:5px 2px;text-align:center;font-size:12px;line-height:1.25;min-height:54px;border-radius:7px}
+.cal button b{display:block;font-size:14px}.cal button.p{background:var(--red);color:#fff;border-color:var(--red)}
+.cal button.cl{background:var(--sand);color:var(--mute)}.cal .e{visibility:hidden}
+.v{font:700 clamp(30px,5vw,48px)/1 "Newsreader",Georgia,serif}
+.pipe{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:16px 0;counter-reset:st}
+.pipe div{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 12px;position:relative;counter-increment:st}
+.pipe div::before{content:counter(st);position:absolute;top:10px;right:12px;font:700 22px "Newsreader",Georgia,serif;color:var(--line)}
+.pipe span{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--red);font-weight:600}
+.pipe b{display:block;font-size:17px}.pipe small{color:var(--mute);font-size:13px}
+table{border-collapse:collapse;width:100%;font-size:15px;background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+th,td{padding:8px 12px;border-bottom:1px solid var(--line);text-align:left}th{font-size:12.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--mute);font-weight:600}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}tr:last-child td{border-bottom:0}td.w{color:var(--ok);font-weight:600}
+.tw{overflow-x:auto}
+ul.ck{list-style:none;padding:0;margin:0}ul.ck li{padding:5px 0 5px 26px;position:relative;border-bottom:1px solid var(--line)}ul.ck li:last-child{border-bottom:0}
+ul.ck li::before{content:"✓";position:absolute;left:4px;color:var(--ok);font-weight:700}ul.ck li.x::before{content:"✕";color:var(--bad)}
+.wd{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin:14px 0}
+.wd .k p{font-size:14.5px;margin:6px 0 0}.wd .k p b{font-size:11.5px;letter-spacing:.08em;color:var(--teal);margin-right:6px}.wd .k p b.do{color:var(--red)}
+.wd h4{margin:0;font-size:17px}
+details{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 14px;margin:12px 0}summary{cursor:pointer;font-weight:600}
+.chart{width:100%;height:auto;display:block}.chart .gr{stroke:var(--line);stroke-width:1}.chart text{fill:var(--mute);font-size:11px;font-family:inherit}
+.chart .l1{fill:none;stroke:var(--red);stroke-width:2.4;stroke-linejoin:round}.chart .l2{fill:none;stroke:var(--teal);stroke-width:2;stroke-dasharray:5 4;stroke-linejoin:round}
+.chart .pt{fill:var(--teal);fill-opacity:.5}
+.ty{font:700 clamp(40px,7vw,72px)/1 "Newsreader",Georgia,serif;color:var(--red);margin:22px 0 4px}
+#notes,#qa{display:none;background:var(--sand);border-top:1px solid var(--line);padding:10px 18px;font-size:14.5px;max-height:32vh;overflow-y:auto}
+#notes.on,#qa.on{display:block}#qa dt{font-weight:600;margin-top:6px}#qa dd{margin:0}#notes b{display:block;font-size:12.5px;color:var(--red);letter-spacing:.04em}
+footer{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:9px 18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--mute)}
+footer .sp{margin-right:auto;max-width:560px}#dots{display:flex;gap:5px}#dots button{width:12px;height:12px;padding:0;border-radius:50%}
+@media (max-width:560px){.row{grid-template-columns:78px 1fr 62px}.cal button{font-size:10.5px}th,td{padding:7px 8px}}
+body{background-image:radial-gradient(circle at 10% -8%,color-mix(in srgb,var(--red) 11%,transparent),transparent 36%),radial-gradient(circle at 96% 104%,color-mix(in srgb,var(--teal) 16%,transparent),transparent 42%);background-attachment:fixed}
+.s.on{animation:in .5s cubic-bezier(.2,.7,.2,1) backwards}
+.s.on .k,.s.on .pipe div{animation:pop .55s cubic-bezier(.2,.8,.2,1) backwards}
+.s.on .grid>*:nth-child(2),.s.on .pipe>*:nth-child(2),.s.on .wd>*:nth-child(2){animation-delay:.1s}.s.on .grid>*:nth-child(3),.s.on .pipe>*:nth-child(3),.s.on .wd>*:nth-child(3){animation-delay:.2s}.s.on .grid>*:nth-child(4),.s.on .pipe>*:nth-child(4){animation-delay:.3s}
+@keyframes in{from{opacity:0;transform:translateY(14px)}}
+@keyframes pop{from{opacity:0;transform:translateY(16px) scale(.96)}}
+@keyframes grow{from{transform:scaleX(0)}}
+@keyframes draw{to{stroke-dashoffset:0}}@keyframes fade{to{opacity:1}}
+@keyframes pulse{from{box-shadow:0 0 0 0 rgba(200,16,46,.55)}to{box-shadow:0 0 0 14px rgba(200,16,46,0)}}
+@keyframes dn{from{stroke-dasharray:0 100}}@keyframes flip{from{transform:rotateX(90deg)}}
+.k{transition:transform .2s,box-shadow .2s}.k:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.14)}
+.trk i,.tl i{transform-origin:left;animation:grow .8s cubic-bezier(.2,.7,.2,1) backwards}
+.mk{position:absolute;top:50%;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:var(--ink);animation:pulse 1.4s infinite}
+.s.on .chart .l1{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 2s .2s ease forwards}
+.s.on .chart .pt{opacity:0;animation:fade .6s .2s forwards}
+.donut .a{animation:dn 1.2s .2s cubic-bezier(.2,.7,.2,1) backwards}
+.cal button{position:relative;overflow:hidden}.cal button u{position:absolute;left:0;bottom:0;height:4px;background:var(--teal);text-decoration:none}.cal button.p u{background:#fff}.cal button.fl{animation:flip .35s}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.s.on .chart .l1{stroke-dashoffset:0}.s.on .chart .pt{opacity:1}}
+
+#who{font-weight:600;color:var(--ink)}#who:empty{display:none}

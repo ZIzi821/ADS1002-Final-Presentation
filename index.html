@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Forecasting Rossmann Sales · ADS1002 group presentation</title>
+<meta name="description" content="ADS1002 group presentation: can historical sales data support a reliable four-week sales plan for the top 223 Rossmann stores?">
+<link rel="preload" href="assets/fonts/newsreader-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/deck.css">
+<link rel="stylesheet" href="assets/stage.css">
+</head><body>
+<header><b>Forecasting Rossmann Sales</b><button id="intro" title="Replay the opening (I)">Opening</button><button id="mu" aria-pressed="true" title="Music on or off (M)">Music</button><button id="tm" title="Start or pause the 10-minute route (about two minutes per presenter)">10:00</button><button id="qb" aria-pressed="false">Q&amp;A extras</button><button id="nt" aria-pressed="false">Notes</button><button id="th">Theme</button></header>
+<div id="bar"><i></i></div>
+<main>
+
+<!-- 1 -->
+<section class="s" data-sp="Li Yiming" data-n="Good morning everyone. Today our group will present our Rossmann sales forecasting project. Sales forecasting matters because a company needs to plan stock, staff, budgets and promotions before the next few weeks happen. Our question is simple: can historical sales data support a reliable four-week plan? We start with 1,115 stores, focus on the top 20 percent, test several forecasting methods, and then build August planning scenarios. I will first explain the business problem, the data and our four research questions.">
+<p class="kick">ADS1002 Group Project · Final Presentation · Monash University</p>
+<h1>Can historical sales data support a reliable four-week sales plan?</h1>
+<p class="lead">Forecasting Rossmann sales: why it matters → focus the data → test fairly → plan four weeks.</p>
+<div class="pipe"><div><span>Historical data</span><b>1,115 stores</b><small>Jan 2013 to Jul 2015</small></div><div><span>Focus</span><b>Top 20% = 223 stores</b><small>by cumulative Sales</small></div><div><span>Validate</span><b>3 × 28-day windows</b><small>plus an untouched July test</small></div><div><span>Forecast</span><b>Aug 1–28 scenarios</b><small>conditional on promotion plans</small></div></div>
+<h3>Presenters and roles</h3>
+<div class="tw"><table><thead><tr><th>Member</th><th>Slides</th><th>Responsible part</th></tr></thead><tbody>
+<tr><td><b>Li Yiming</b></td><td>1–2</td><td>Business context, data and research questions</td></tr>
+<tr><td><b>Lim Ying Yu</b></td><td>3–4</td><td>Data wrangling and store statistics</td></tr>
+<tr><td><b>Tay Chen Zhe</b></td><td>5–6</td><td>Calendar patterns, customers and promotions</td></tr>
+<tr><td><b>Huang Qingyue</b></td><td>7–8</td><td>Forecast design and model results</td></tr>
+<tr><td><b>Yanyu Zhu</b></td><td>9–10</td><td>Scenarios, recommendations and next steps</td></tr>
+</tbody></table></div>
+<p class="sm" style="margin-top:8px">Five presenters, two slides each, one connected story from data to decision.</p></section>
+
+<!-- 2 -->
+<section class="s" data-sp="Li Yiming" data-n="The training data cover 1,115 stores from January 2013 to July 2015. Following the project brief, we focus on the top 20 percent by cumulative sales, giving 223 stores and 208,226 store-day records. We ask four questions: how different are the top-selling stores, how sales change over time and promotions, whether a learned model can beat a simple historical profile, and how different promotion schedules change a four-week forecast. These questions connect description, modelling and business planning. Next, our group leader Lim Ying Yu will explain how we prepared the data and what the store statistics show.">
+<p class="kick">Slide 2 · Speaker: Li Yiming</p>
+<h2>Business problem, data and four research questions</h2>
+<p class="lead">Start with three things: the business decision, the available data, and what can be known at forecast time.</p>
+<div class="grid"><div class="k"><span class="lb">Original network</span><div class="big">1,115</div><small>stores in the supplied train data</small></div><div class="k"><span class="lb">Analytical focus</span><div class="big">223</div><small>top 20% by cumulative recorded Sales</small></div><div class="k"><span class="lb">Observations</span><div class="big">208,226</div><small>selected store-day records</small></div><div class="k"><span class="lb">Date range</span><div class="big nc">2013–2015</div><small>1 Jan 2013 to 31 Jul 2015</small></div></div>
+<div class="two"><div><h3>Why forecasting matters</h3><ul class="ck"><li>Inventory planning</li><li>Staffing decisions</li><li>Budgeting and short-term resource allocation</li><li>Promotion-aware demand planning</li></ul></div>
+<div><h3>Four questions guide the project</h3><div class="ctl" style="flex-direction:column"><button class="chip" data-go="3"><b>RQ1</b> How concentrated and variable are the top-selling stores?</button><button class="chip" data-go="4"><b>RQ2</b> How do time, opening and promotions relate to Sales?</button><button class="chip" data-go="7"><b>RQ3</b> Can learned models beat a transparent historical profile?</button><button class="chip" data-go="8"><b>RQ4</b> How do promotion schedules change forecasts under fixed opening and holiday assumptions?</button></div></div></div>
+<p class="take">Understand the data first, then test a four-week forecast under realistic information limits.</p>
+<p class="sm">Data: the Rossmann training file named in the project brief (Kaggle Rossmann Store Sales). No other competition files are used.</p></section>
+
+<!-- 3 -->
+<section class="s" data-sp="Lim Ying Yu" data-n="Thank you. Before modelling, we first made sure the data kept its correct business meaning. We parsed the dates, checked the weekdays, sorted the records by store and date, and kept holiday codes as categories. There are no missing cells, no duplicate store-date records and no weekday mismatches. But ten selected stores have shorter calendars. This matters because a missing date does not mean the store was closed. So we did not fill missing dates with zero sales. We kept verified closed-day zeros, and we also kept seven open-day zero-sales records because their cause is unknown. The top 223 stores together contribute about 31 percent of recorded sales.">
+<p class="kick">Slide 3 · Speaker: Lim Ying Yu</p>
+<h2>Data wrangling and business meaning</h2>
+<p class="lead">No missing cells does not mean a complete calendar.</p>
+<div class="pipe"><div><span>Original data</span><b>1,115 stores</b><small>supplied training file</small></div><div><span>Rank</span><b>Cumulative Sales</b><small>store-level aggregation</small></div><div><span>Focus</span><b>Top 20% = 223</b><small>project-defined cohort</small></div><div><span>Concentration</span><b>31.0% of Sales</b><small>208,226 store-days</small></div></div>
+<h3>Quality checks</h3>
+<div class="grid"><div class="k t"><span class="lb">Missing cells</span><div class="big">0</div><small>no cell imputation required</small></div><div class="k t"><span class="lb">Duplicate store-dates</span><div class="big">0</div><small>each observed key is unique</small></div><div class="k t"><span class="lb">Weekday mismatches</span><div class="big">0</div><small>DayOfWeek agrees with Date</small></div><div class="k"><span class="lb">Short calendars</span><div class="big">10</div><small>213 stores have 942 dates; 10 have 758</small></div></div>
+<div class="two"><div class="k" style="display:flex;gap:16px;align-items:center"><svg class="donut" width="110" height="110" viewBox="0 0 36 36" style="flex:none" role="img" aria-label="Pie chart: top 223 stores hold 31.0 percent of recorded Sales and the other 892 stores 69.0 percent"><circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--teal)" stroke-width="6"/><circle class="a" cx="18" cy="18" r="15.9" fill="none" stroke="var(--red)" stroke-width="6" stroke-dasharray="31 100" transform="rotate(-90 18 18)"/></svg><div><b>31.0% of recorded Sales</b> come from the top 223 stores; the other 892 stores account for 69.0%.<small>Sales split including closed days.</small></div></div>
+<div><h3 style="margin-top:0">How zeros and gaps are handled</h3><ul class="ck"><li>Dates parsed, weekdays checked, records sorted by store and date</li><li>Holiday codes kept as categories</li><li>Closed-day zeros retained as real zeros</li><li>7 selected open-day zero records retained (cause unknown)</li><li class="x">Missing dates never converted to zero demand</li></ul></div></div>
+<p class="take">Missing cell, missing date and zero Sales are not the same thing.</p></section>
+
+<!-- 4 -->
+<section class="s" data-sp="Lim Ying Yu" data-n="Next, we compared sales levels across these 223 stores. Their overall recorded-day mean is about 8,748 units, with a standard deviation of 5,086. On open days, the mean rises to about 10,409. Store-level averages also differ a lot, from about 6,918 to 20,719 units, with Store 262 the highest. The histogram shows that most stores are near the lower end, while a small number sell much more. The key point is that one overall network average cannot represent every store. Store-specific history is important for planning and forecasting. Tay will now explain the time, customer and promotion patterns.">
+<p class="kick">Slide 4 · Speaker: Lim Ying Yu</p>
+<h2>Sales differences across the selected stores</h2>
+<p class="lead">Even among the top-selling stores, daily sales levels differ a lot.</p>
+<div class="grid"><div class="k"><span class="lb">Observation-weighted mean</span><div class="big">8,748</div><small>open-day mean = 10,409</small></div><div class="k"><span class="lb">Overall standard deviation</span><div class="big">5,086</div><small>range = 0 to 41,551</small></div><div class="k"><span class="lb">Store-mean range</span><div class="big">6,918 to 20,719</div><small>Store 262 has the highest mean</small></div></div>
+<h3>Distribution of 223 store means</h3>
+<div id="hist"></div><p class="sm">Mean Sales per store (thousand units) against number of stores. Most stores sit at the lower end; a few sell far more.</p>
+<p class="take">Use store-specific history: one network average is not enough.</p></section>
+
+<!-- 5 -->
+<section class="s" data-sp="Tay Chen Zhe" data-n="We first looked at sales over time. The line chart compares all 223 selected stores with the 213 stores that have complete calendars. The two lines move closely together, including the December peaks in both 2013 and 2014. This suggests that shorter calendars are unlikely to explain the main pattern. We also see clear weekday differences. On open days, Monday has the highest average sales at about 12,160 units, while Saturday is lower at about 9,067. December is also high at about 12,728. Open Sundays are a small and selective group, so we do not treat them as a normal Sunday pattern.">
+<p class="kick">Slide 5 · Speaker: Tay Chen Zhe</p>
+<h2>Calendar patterns and coverage</h2>
+<p class="lead">Sales move over time, and the same broad pattern appears with or without shorter calendars.</p>
+<svg class="chart" id="ts" viewBox="0 0 900 240" role="img" aria-label="Weekly mean Sales per store from January 2013 to July 2015 for all 223 stores and the 213 complete-calendar stores; both lines peak each December"></svg>
+<div class="leg"><span><b style="background:var(--red)"></b>All 223 selected stores</span><span><b style="background:var(--teal)"></b>213 complete-calendar stores (dashed)</span><span>Weekly mean Sales per store-day</span></div>
+<div class="two"><div><h3>Weekday means</h3><div class="ctl"><button data-w="open" class="on">Open days only</button><button data-w="all">All recorded days</button></div><div id="wk"></div></div>
+<div><div class="grid" style="grid-template-columns:1fr"><div class="k"><span class="lb">December mean</span><div class="big">12,728</div><small>peaks in both Dec 2013 and Dec 2014</small></div><div class="k t"><span class="lb">Open Sundays</span><div class="big">10,322</div><small>a small, selective subset, not a normal Sunday pattern. With closures included Sunday falls to 790.</small></div></div></div></div>
+<p class="take">December peaks occur in both series. Coverage alone is unlikely to explain the broad movement.</p></section>
+
+<!-- 6 -->
+<section class="s" data-sp="Tay Chen Zhe" data-n="We then looked at customers and promotions. On open days, the correlation between Customers and Sales is 0.755, so they move strongly together. But future customer counts are not known when a forecast is made, so we do not use future Customers as an input. Promotion also has a clear association with sales. Open-day sales are about 34.9 percent higher during promotion observations. When we compare the same store and weekday, the median difference is still about 34.1 percent. However, this is an association, not proof that promotion directly causes the full increase. Huang will now explain how we tested the forecasting models fairly.">
+<p class="kick">Slide 6 · Speaker: Tay Chen Zhe</p>
+<h2>Customer and promotion associations</h2>
+<p class="lead">Customers strongly track realised Sales; Promo can be planned in advance.</p>
+<div class="two"><div><div class="k"><span class="lb">Customers ↔ Sales</span><div class="big nc">r = 0.755</div><small>Open-day r uses all observations. Plot shows 220 sampled points.</small></div>
+<svg class="chart" id="sc" viewBox="0 0 440 300" role="img" aria-label="Scatter plot of 220 sampled open days: Sales rise with Customers"></svg></div>
+<div><div class="k"><span class="lb">Promotion signal</span><div class="big">+34.9%</div><small>Matched store × weekday median difference: +34.1%.</small></div>
+<h3>Mean open-day Sales</h3><div id="pr"></div><p class="sm">No promotion 9,016 vs promotion 12,161 units.</p></div></div>
+<p class="take">Realised Customers are unavailable for future forecasts. Promotion differences remain associations.</p></section>
+
+<!-- 7 -->
+<section class="s" data-sp="Huang Qingyue" data-n="To test the models fairly, we used three separate 28-day validation windows and then kept July as an independent final test. At each forecast date, we only used information that would already be available. Store rankings were based on past data, historical sales profiles used earlier sales only, and transformations were fitted on the training rows only. Future Customers were excluded. We compared a historical profile, OLS, Ridge regression, decision trees and random forests. OLS and Ridge also satisfy the project brief&#x27;s simple-model requirement. We selected settings using RMSE, while also checking MAE.">
+<p class="kick">Slide 7 · Speaker: Huang Qingyue</p>
+<h2>Forecast design: how we tested models fairly</h2>
+<p class="lead">Use only information available at each forecast date, then keep July untouched until the end.</p>
+<h3>Four 28-day horizons (select one)</h3>
+<div class="ctl" id="og"></div>
+<div class="tl" id="tl"></div><div class="ticks"><span style="left:0">Jan 2013</span><span style="left:37.6%">Jan 2014</span><span style="left:75.3%">Jan 2015</span><span style="right:0">Aug 2015</span></div>
+<div class="leg"><span><b style="background:var(--teal);opacity:.35"></b>history for profiles</span><span><b style="background:var(--teal)"></b>365-day model fit window</span><span><b style="background:var(--red)"></b>28-day forecast</span></div>
+<div class="k" style="margin-top:12px" id="oi"></div>
+<div class="two"><div><h3>Leakage controls</h3><ul class="ck"><li>Re-rank stores using past data at each origin</li><li>Build profiles from earlier Sales only</li><li>Fit transformations on training rows only</li><li>Freeze profiles for the full 28-day horizon</li></ul></div>
+<div><h3>Information allowed at forecast time</h3><ul class="ck"><li>Historical Sales profiles</li><li>Weekday, month and trend</li><li>Known Open, Promo and holiday schedules</li><li class="x">Realised future Customers excluded</li></ul></div></div>
+<p class="sm">Models compared: historical profile, OLS, Ridge regression, decision trees and random forests. Settings chosen by RMSE, with MAE also checked.</p>
+<details><summary>Try it: which inputs are allowed at the August origin (31 July)?</summary><div id="lk"></div><div class="ctl"><button id="ra">Reveal all</button><button id="lr">Reset</button><span class="sm" id="ls"></span></div></details>
+<p class="take">Choose models on earlier windows. Use July only once as an independent test.</p></section>
+
+<!-- 8 -->
+<section class="s" data-sp="Huang Qingyue" data-n="During validation, the random forest had the lowest average RMSE, about 1,335, compared with 1,366 for the historical profile. That is only a 2.2 percent improvement, and the profile actually had the lower MAE. More importantly, the result changed on the independent July test. The historical profile had an RMSE of 1,390, while the forest had 1,482. The profile also had better MAE and better open-day R-squared. We did not change the model after seeing July. So our conclusion is that the forest is not consistently better, and the historical profile should remain the operational reference. Yanyu will present the August planning scenarios.">
+<p class="kick">Slide 8 · Speaker: Huang Qingyue</p>
+<h2>The forest wins validation, but loses in July</h2>
+<p class="lead">A small 2.2% validation edge does not survive the independent July test.</p>
+<p>Eight candidates ranked by mean RMSE over three 28-day validation windows (lower is better). Select a model to highlight it, then reveal the July test.</p>
+<div id="md"></div>
+<p class="sm">Validation RMSE: forest 1,335 vs profile 1,366 (−2.2%). Validation MAE: profile 882 vs forest 910.</p>
+<div class="ctl"><button id="lk2">Reveal July results</button><button id="rs">Reset</button></div>
+<div id="jl" style="display:none"><div class="k" id="vd"></div>
+<h3>Independent July test</h3><div class="tw"><table><thead><tr><th>Store-day metric</th><th class="n">Profile</th><th class="n">Forest</th></tr></thead><tbody><tr><td>All-day RMSE</td><td class="n w">1,390</td><td class="n">1,482</td></tr><tr><td>All-day MAE</td><td class="n w">909</td><td class="n">974</td></tr><tr><td>Open-day R²</td><td class="n w">0.814</td><td class="n">0.789</td></tr></tbody></table></div>
+<p class="sm" style="margin-top:8px">Forest July RMSE is 6.6% higher. Settings remain locked after the test. The paired 7-day-block bootstrap range for baseline minus forest RMSE is −320 to 81, so the gap is inconclusive. OLS and Ridge (the brief’s simple models) scored 1,434 to 1,446.</p>
+<p class="take">The historical profile remains the operational reference. The forest needs further testing.</p></div></section>
+
+<!-- 9 -->
+<section class="s" data-sp="Yanyu Zhu" data-n="For August 1 to 28, actual sales are not available, so we present conditional planning scenarios rather than an accuracy result. Under no promotion, predicted sales are about 48.89 million units. Repeating the recent promotion schedule gives about 55.59 million. Promotion on all weekdays gives about 61.72 million. Only the promotion schedule changes between these cases. Opening uses the recent weekday pattern, SchoolHoliday uses the last observed value, and StateHoliday is assumed to be zero. These differences show how the plan changes under different inputs, but they do not prove a causal return from promotions.">
+<p class="kick">Slide 9 · Speaker: Yanyu Zhu</p>
+<h2>August scenarios: promotion schedules change the plan</h2>
+<p class="lead">August outcomes are unavailable, so these are conditional planning scenarios, not accuracy claims.</p>
+<div class="grid"><button class="k" data-pr="none" style="text-align:left"><span class="lb">No promotion</span><div class="v">48.89 M</div><small>conditional 28-day total</small></button><button class="k" data-pr="rec" style="text-align:left"><span class="lb">Recent schedule repeated</span><div class="v">55.59 M</div><small>reference planning case</small></button><button class="k" data-pr="all" style="text-align:left"><span class="lb">Weekday promotion</span><div class="v">61.72 M</div><small>association-based scenario</small></button></div>
+<p class="sm">Pick a scenario, or toggle weekdays to build your own. Each day shows the forest’s predicted Sales (million units, 223 stores) with or without promotion that day.</p>
+<div class="cal" id="cal"></div>
+<div class="grid"><div class="k"><div class="v" id="tot">55.59</div><small>million Sales units, 223 stores, 1–28 Aug</small></div><div class="k"><div class="v" id="dl">+6.70</div><small>million vs no promotion, <span id="pc">10</span> of 20 weekdays promoted</small></div><div class="k"><small id="rp" style="margin:0"></small></div></div>
+<div class="k t"><span class="lb">Scenario assumptions</span>Open: weekday majority in the last 56 days. SchoolHoliday: last observed value. StateHoliday: assumed 0. Reference Promo: 18–31 July repeated twice. Only the promotion schedule changes between cases.</div>
+<p class="take">These scenarios support planning; they do not prove causal campaign returns.</p></section>
+
+<!-- 10 -->
+<section class="s" data-sp="Yanyu Zhu" data-n="Based on our results, we recommend three actions. First, replace scenario assumptions with confirmed opening, promotion and holiday schedules whenever possible. Second, use the historical profile as the main reference model and keep the random forest as a challenger for further testing. Third, monitor errors by store and promotion period, and compare the business cost of over-forecasting and under-forecasting. Our results apply to the top 20 percent of stores, so they should not automatically be generalised to the full network. Future work should test different training windows and business-cost-based evaluation. Overall, a useful four-week forecast needs realistic inputs, fair testing and continuous monitoring. Thank you.">
+<p class="kick">Slide 10 · Speaker: Yanyu Zhu</p>
+<h2>Recommendations: what managers should do next</h2>
+<p class="lead">July supports a simple reference model, confirmed business inputs, and monitored use.</p>
+<div class="wd"><div class="k"><h4>1. Confirm the business inputs</h4><p><b>WHY</b>Forecast totals depend on Open, Promo and holiday inputs.</p><p><b class="do">DO</b>Replace assumptions with confirmed schedules.</p></div>
+<div class="k"><h4>2. Historical profile as the reference</h4><p><b>WHY</b>The forest wins validation but loses the July test.</p><p><b class="do">DO</b>Use the profile as reference; keep the random forest as challenger.</p></div>
+<div class="k"><h4>3. Monitor errors by store and period</h4><p><b>WHY</b>Large misses and promotion bias affect operations (forest bias on promoted open days: +731 units).</p><p><b class="do">DO</b>Monitor by store and period; compare the business cost of over- vs under-forecasting.</p></div></div>
+<div class="grid"><div class="k"><div class="big">+34.9%</div><small>open-day Sales with a promotion (12,161 vs 9,016); +34.1% within store and weekday</small></div><div class="k"><div class="big">10.1%</div><small>baseline July WAPE, vs 10.9% for the forest</small></div><div class="k"><div class="big">87.7%</div><small>July coverage of a nominal 90% residual band</small></div></div>
+<div class="two"><div class="k t"><span class="lb">Evidence boundaries</span>Top-20% stores only, not the full network. August schedules are assumptions. Promotion effects are associative, not causal.</div><div class="k t"><span class="lb">Next analytical step</span>Test shorter and longer training windows, then use metrics that reflect the cost of over- vs under-forecasting.</div></div>
+<p class="take">A useful four-week forecast needs realistic inputs, fair testing and continuous monitoring.</p>
+<div class="ty">Thank you</div><p class="sm">Questions welcome. Open “Q&amp;A extras” for prepared answers.</p></section>
+</main>
+<div id="notes"></div>
+<dl id="qa"><dt>Why exclude Customers?</dt><dd>It correlates 0.755 with Sales on open days but is unknown at forecast time. Using it would overstate accuracy.</dd><dt>Why keep the high sales values?</dt><dd>They can be genuine promotion days. Removing them would make validation look easier.</dd><dt>Why keep the seven open-day zeros?</dt><dd>Their cause is unknown, so deleting them would be a guess. Missing dates are a different case and are never filled with zero.</dd><dt>Is the forest really worse?</dt><dd>July RMSE was 6.6% higher, but a 7-day-block bootstrap range (−320 to 81) spans zero. The evidence is inconclusive, not proof the profile is better.</dd><dt>Why do the open Sundays look so strong?</dt><dd>Only a small, selective group of stores opens on Sunday, so its 10,322 mean is not a typical Sunday.</dd><dt>Where do the planner’s daily values come from?</dt><dd>They are the fitted 120-tree forest’s daily totals from the no-promotion and every-weekday runs. The recent-schedule run uses exactly those values on promoted and unpromoted days, so the three report totals are reproduced. Custom mixes reuse the same per-day outputs.</dd></dl>
+<footer><span id="who"></span><span class="sp">Source: supplied Rossmann training data and project analysis (ADS1002 group report, train file only). Sales are dataset units, not currency.</span><button id="pv" aria-label="Previous slide">←</button><div id="dots"></div><span id="ct"></span><button id="nx" aria-label="Next slide">→</button></footer>
+<script src="assets/vendor/gsap.min.js"></script>
+<script src="assets/vendor/qrcode.js"></script>
+<script src="app/music.js"></script>
+<script src="app/stage.js"></script>
+<script src="app/deck.js"></script>
+</body></html>
