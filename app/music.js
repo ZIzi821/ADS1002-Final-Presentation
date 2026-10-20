@@ -82,6 +82,20 @@
       var o = c.createOscillator(), g = c.createGain(); o.type = "sine"; o.frequency.value = 2093;
       env(g, t, 0.003, 0.2, 0.9); o.connect(g).connect(c.destination); o.start(t); o.stop(t + 1);
     },
+    boom: function (c, t) { // impact: falling sine thump + short noise crack
+      var o = c.createOscillator(), g = c.createGain(); o.type = "sine";
+      o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(36, t + 0.5);
+      env(g, t, 0.004, 0.7, 0.75); o.connect(g).connect(c.destination); o.start(t); o.stop(t + 0.9);
+      var s = noise(c, 0.35), f = c.createBiquadFilter(), g2 = c.createGain(); f.type = "lowpass"; f.frequency.value = 1200;
+      env(g2, t, 0.002, 0.35, 0.28); s.connect(f).connect(g2).connect(c.destination); s.start(t); s.stop(t + 0.35);
+    },
+    hit: function (c, t) { // snare-like snap
+      var s = noise(c, 0.2), f = c.createBiquadFilter(), g = c.createGain(); f.type = "highpass"; f.frequency.value = 1800;
+      env(g, t, 0.002, 0.22, 0.14); s.connect(f).connect(g).connect(c.destination); s.start(t); s.stop(t + 0.2);
+      var o = c.createOscillator(), g2 = c.createGain(); o.type = "triangle";
+      o.frequency.setValueAtTime(260, t); o.frequency.exponentialRampToValueAtTime(140, t + 0.1);
+      env(g2, t, 0.002, 0.18, 0.12); o.connect(g2).connect(c.destination); o.start(t); o.stop(t + 0.2);
+    },
     buzz: function (c, t) { // neon sign hum flicker
       var o = c.createOscillator(), g = c.createGain(), f = c.createBiquadFilter(); o.type = "sawtooth"; o.frequency.value = 100;
       f.type = "lowpass"; f.frequency.value = 700; env(g, t, 0.02, 0.05, 0.35); o.connect(f).connect(g).connect(c.destination); o.start(t); o.stop(t + 0.45);

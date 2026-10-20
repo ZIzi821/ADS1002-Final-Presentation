@@ -13,7 +13,7 @@ Presenters: Li Yiming, Lim Ying Yu, Tay Chen Zhe, Huang Qingyue and Yanyu Zhu.
 | Opening | A dark screen with one drugstore. Click it or press **→**: a 15-second film where the street lamp and the DROGERIE sign light up, the shutter rolls up, the shelves fill and the door sign flips to OPEN. The camera pulls back to 1,115 stores, the top 223 light up red, and they turn into the real weekly sales line (Jan 2013 to Jul 2015) with a question mark over 1–28 August. |
 | Team walk-on | Five staff badges drop in. **→** lights up the team while everyone introduces themselves; the next **→** sweeps a shopping cart across the screen into slide 1. |
 | Slides 1–10 | The same content as the group PowerPoint, with the interactive charts (weekday toggle, forecast windows, leakage check, July reveal, August scenario planner). |
-| Handover cards | When the presenter changes, a card says who is next ("Next up · 02 · Lim Ying Yu") and waits for **→**. **←** cancels it. |
+| Presenter transitions | When the presenter changes, two panels in the next presenter's colour slam together with a flash, a screen shake, light rays and products bursting out; a giant number punches in and the name flies in letter by letter ("Next up · 02 · Lim Ying Yu"). It waits for **→**, then the panels split open onto their first slide. **←** cancels it. |
 | Curtain call | After slide 10, **→** opens "Thank you" with the team, a QR code to this site and the opening music. **→** turns it to "Questions?", and **→** again goes back to the slides. |
 
 ## Presenting
@@ -21,6 +21,7 @@ Presenters: Li Yiming, Lim Ying Yu, Tay Chen Zhe, Huang Qingyue and Yanyu Zhu.
 - **→**, **Space**, **Page Down** or a clicker: next. **←** or **Page Up**: back.
 - **S**: skip the opening. **I** or the **Opening** button: play the opening again.
 - **M** or the **Music** button: music on or off. **K** (or a clicker's blank-screen key, **B** or **.**): pause the animation and music.
+- **F**: full screen (the top toolbar hides; **Esc** leaves). Every slide is laid out at the same width and scaled by one shared factor so it fits the screen without scrolling (from about 1280×720 up); only slide 8 with the July results revealed shrinks a little more on small laptops. Phones scroll as usual.
 - **N**: presenter notes. The **10:00** button starts a talk timer (about two minutes per presenter).
 - The opening track can be chosen at the bottom left of the start screen.
 - A link with `?nointro` or `#s-4` (any slide number) opens without the opening.

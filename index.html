@@ -4,8 +4,8 @@
 <title>Forecasting Rossmann Sales · ADS1002 group presentation</title>
 <meta name="description" content="ADS1002 group presentation: can historical sales data support a reliable four-week sales plan for the top 223 Rossmann stores?">
 <link rel="preload" href="assets/fonts/newsreader-700.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/deck.css">
-<link rel="stylesheet" href="assets/stage.css">
+<link rel="stylesheet" href="assets/deck.css?v=6">
+<link rel="stylesheet" href="assets/stage.css?v=6">
 </head><body>
 <header><b>Forecasting Rossmann Sales</b><button id="intro" title="Replay the opening (I)">Opening</button><button id="mu" aria-pressed="true" title="Music on or off (M)">Music</button><button id="tm" title="Start or pause the 10-minute route (about two minutes per presenter)">10:00</button><button id="qb" aria-pressed="false">Q&amp;A extras</button><button id="nt" aria-pressed="false">Notes</button><button id="th">Theme</button></header>
 <div id="bar"><i></i></div>
@@ -118,10 +118,10 @@
 <h2>August scenarios: promotion schedules change the plan</h2>
 <p class="lead">August outcomes are unavailable, so these are conditional planning scenarios, not accuracy claims.</p>
 <div class="grid"><button class="k" data-pr="none" style="text-align:left"><span class="lb">No promotion</span><div class="v">48.89 M</div><small>conditional 28-day total</small></button><button class="k" data-pr="rec" style="text-align:left"><span class="lb">Recent schedule repeated</span><div class="v">55.59 M</div><small>reference planning case</small></button><button class="k" data-pr="all" style="text-align:left"><span class="lb">Weekday promotion</span><div class="v">61.72 M</div><small>association-based scenario</small></button></div>
-<p class="sm">Pick a scenario, or toggle weekdays to build your own. Each day shows the forest’s predicted Sales (million units, 223 stores) with or without promotion that day.</p>
+<div class="plan"><div><p class="sm">Pick a scenario, or toggle weekdays to build your own. Each day shows the forest’s predicted Sales (million units, 223 stores) with or without promotion that day.</p>
 <div class="cal" id="cal"></div>
-<div class="grid"><div class="k"><div class="v" id="tot">55.59</div><small>million Sales units, 223 stores, 1–28 Aug</small></div><div class="k"><div class="v" id="dl">+6.70</div><small>million vs no promotion, <span id="pc">10</span> of 20 weekdays promoted</small></div><div class="k"><small id="rp" style="margin:0"></small></div></div>
-<div class="k t"><span class="lb">Scenario assumptions</span>Open: weekday majority in the last 56 days. SchoolHoliday: last observed value. StateHoliday: assumed 0. Reference Promo: 18–31 July repeated twice. Only the promotion schedule changes between cases.</div>
+</div><div><div class="grid tots"><div class="k"><div class="v" id="tot">55.59</div><small>million Sales units, 223 stores, 1–28 Aug</small></div><div class="k"><div class="v" id="dl">+6.70</div><small>million vs no promotion, <span id="pc">10</span> of 20 weekdays promoted</small></div><div class="k"><small id="rp" style="margin:0"></small></div></div>
+<div class="k t"><span class="lb">Scenario assumptions</span>Open: weekday majority in the last 56 days. SchoolHoliday: last observed value. StateHoliday: assumed 0. Reference Promo: 18–31 July repeated twice. Only the promotion schedule changes between cases.</div></div></div>
 <p class="take">These scenarios support planning; they do not prove causal campaign returns.</p></section>
 
 <!-- 10 -->
@@ -142,7 +142,7 @@
 <footer><span id="who"></span><span class="sp">Source: supplied Rossmann training data and project analysis (ADS1002 group report, train file only). Sales are dataset units, not currency.</span><button id="pv" aria-label="Previous slide">←</button><div id="dots"></div><span id="ct"></span><button id="nx" aria-label="Next slide">→</button></footer>
 <script src="assets/vendor/gsap.min.js"></script>
 <script src="assets/vendor/qrcode.js"></script>
-<script src="app/music.js"></script>
-<script src="app/stage.js"></script>
-<script src="app/deck.js"></script>
+<script src="app/music.js?v=6"></script>
+<script src="app/stage.js?v=6"></script>
+<script src="app/deck.js?v=6"></script>
 </body></html>

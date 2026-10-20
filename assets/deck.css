@@ -93,3 +93,10 @@ body{background-image:radial-gradient(circle at 10% -8%,color-mix(in srgb,var(--
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.s.on .chart .l1{stroke-dashoffset:0}.s.on .chart .pt{opacity:1}}
 
 #who{font-weight:600;color:var(--ink)}#who:empty{display:none}
+
+/* slide 9 planner: calendar beside the totals */
+.plan{display:grid;grid-template-columns:1.45fr 1fr;gap:16px;align-items:start}.plan .tots{grid-template-columns:1fr;margin-top:0;gap:10px}.plan .tots .k{padding:9px 14px}.plan .tots .v{font-size:clamp(26px,3.4vw,38px)}
+@media (max-width:760px){.plan{grid-template-columns:1fr}}
+/* fit-to-screen presenting: every slide laid out at 1000px, then zoomed by one shared factor */
+body.fit .s{width:1000px;max-width:none}body.fit .s.on{display:flow-root}
+body.fs header{display:none}

@@ -7,7 +7,7 @@
 #stage[data-mode=film] .st-film,#stage[data-mode=title] .st-film,#stage[data-mode=team] .st-film,#stage[data-mode=lit] .st-film{display:block}
 #stage[data-mode=film] .st-title,#stage[data-mode=title] .st-title{display:block}
 #stage[data-mode=team] .st-team,#stage[data-mode=lit] .st-team{display:flex}
-#stage[data-mode=handover] .st-hand{display:flex}
+
 #stage[data-mode=curtain] .st-curtain,#stage[data-mode=questions] .st-curtain{display:flex}
 #stage .st-wipe{display:none}#stage.sweeping .st-wipe{display:block;pointer-events:none;transform:translateX(-101%);background:#c8102e;z-index:5}
 #stage .st-hint{display:block;inset:auto 22px 18px auto;font-size:14px;color:#c9c3b6;letter-spacing:.04em;opacity:0;z-index:4}
@@ -51,14 +51,24 @@
 .badge .bar{height:16px;margin:0 14px 12px;background:repeating-linear-gradient(90deg,#17212b 0 2px,transparent 2px 4px,#17212b 4px 5px,transparent 5px 8px)}
 #stage[data-mode=lit] .badge{filter:none;box-shadow:0 0 0 2px #f2a900,0 18px 44px rgba(242,169,0,.28)}
 
-/* handover */
-.st-hand{align-items:center;justify-content:center;background:rgba(11,17,23,.62);backdrop-filter:blur(3px);z-index:3}
-.hand{background:#fbf8f1;color:#17212b;border-radius:16px;padding:26px 30px;min-width:min(420px,88vw);box-shadow:0 24px 60px rgba(0,0,0,.45);border-top:8px solid #c8102e;position:relative;overflow:hidden}
-.hand .kk{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#c8102e;font-weight:600}
-.hand .no{position:absolute;right:20px;top:8px;font:700 92px/1 "Newsreader",Georgia,serif;color:#ece7dc}
-.hand .nm{font:700 clamp(30px,4.6vw,44px)/1.05 "Newsreader",Georgia,serif;margin:8px 0 6px;position:relative}
-.hand .rl{color:#5d6a76;position:relative}
-.hand .ft{margin-top:18px;font-size:13px;color:#5d6a76}.hand kbd{border:1px solid #bbb;border-radius:5px;padding:0 6px;font:inherit}
+/* handover: explosive presenter transition */
+.st-hand{z-index:3;overflow:hidden}
+#stage[data-mode=handover] .st-hand{display:block}
+.st-hand .hp{position:absolute;inset:-5%}
+.st-hand .hp1{background:var(--pc,#c8102e) repeating-linear-gradient(115deg,rgba(255,255,255,.08) 0 16px,transparent 16px 46px);clip-path:polygon(0 0,66% 0,38% 100%,0 100%)}
+.st-hand .hp2{background:#0b1117 repeating-linear-gradient(115deg,rgba(255,255,255,.035) 0 16px,transparent 16px 46px);clip-path:polygon(66% 0,100% 0,100% 100%,38% 100%)}
+.st-hand .rays{position:absolute;left:50%;top:50%;width:170vmax;height:170vmax;margin:-85vmax 0 0 -85vmax;opacity:0;pointer-events:none}
+.st-hand .burst{position:absolute;left:50%;top:50%;width:0;height:0}.st-hand .burst svg{position:absolute;left:0;top:0}
+.st-hand .hc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4vw}
+.st-hand .hno{position:absolute;inset:0;display:grid;place-items:center;font:700 52vh/1 "Newsreader",Georgia,serif;color:transparent;-webkit-text-stroke:3px rgba(255,255,255,.5);opacity:0;pointer-events:none}
+.st-hand .hk{position:relative;font-weight:600;font-size:clamp(14px,1.6vw,22px);letter-spacing:.42em;text-transform:uppercase;color:#f2a900;opacity:0}
+.st-hand .hnm{position:relative;font:700 clamp(46px,9vw,150px)/1.02 "Newsreader",Georgia,serif;color:#fff;text-shadow:0 8px 34px rgba(0,0,0,.45);white-space:nowrap;margin-top:.12em}
+.st-hand .hnm span{display:inline-block;opacity:0}
+.st-hand .hbar{position:relative;height:9px;width:min(560px,62vw);background:#f2a900;margin:2.2vh 0 1.6vh;transform:scaleX(0);transform-origin:left}
+.st-hand .hrl{position:relative;font-size:clamp(15px,1.9vw,26px);color:#fff;opacity:0;max-width:40ch}
+.st-hand .hft{position:absolute;right:22px;bottom:18px;color:#fff;font-size:13px;opacity:0}
+.st-hand kbd{border:1px solid rgba(255,255,255,.6);border-radius:5px;padding:0 6px;font:inherit}
+.st-hand .flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
 
 /* curtain */
 .st-curtain{flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;gap:14px;background:radial-gradient(ellipse at 50% 30%,#3a0b16 0,#0b1117 62%)}

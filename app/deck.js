@@ -2,7 +2,7 @@ var startHash=location.hash;
 var S=[].slice.call(document.querySelectorAll(".s")),i=0,$=function(x){return document.querySelector(x)},$$=function(x){return [].slice.call(document.querySelectorAll(x))};
 $("#dots").innerHTML=S.map(function(_,k){return '<button aria-label="Slide '+(k+1)+'" data-go="'+k+'"></button>'}).join("");
 function show(n,dir){var prev=i;i=Math.max(0,Math.min(S.length-1,n));S.forEach(function(s,k){s.classList.toggle("on",k===i)});$$("#dots button").forEach(function(b,k){b.classList.toggle("on",k===i)});
-$("#who").textContent="Presenting · "+S[i].dataset.sp;$("#ct").textContent=(i+1)+" / "+S.length;$("#bar i").style.width=((i+1)/S.length*100)+"%";$("#notes").innerHTML="";var hb=document.createElement("b");hb.textContent="Speaker: "+S[i].dataset.sp;$("#notes").appendChild(hb);$("#notes").appendChild(document.createTextNode(S[i].dataset.n));$("main").scrollTop=0;history.replaceState(null,"","#s-"+(i+1));cu(S[i]);if(window.gsap&&!matchMedia("(prefers-reduced-motion:reduce)").matches&&dir){gsap.fromTo(S[i],{x:dir*60,opacity:0},{x:0,opacity:1,duration:.55,ease:"power3.out",clearProps:"transform,opacity"})}}
+$("#who").textContent="Presenting · "+S[i].dataset.sp;$("#ct").textContent=(i+1)+" / "+S.length;$("#bar i").style.width=((i+1)/S.length*100)+"%";$("#notes").innerHTML="";var hb=document.createElement("b");hb.textContent="Speaker: "+S[i].dataset.sp;$("#notes").appendChild(hb);$("#notes").appendChild(document.createTextNode(S[i].dataset.n));$("main").scrollTop=0;history.replaceState(null,"","#s-"+(i+1));fitCur();cu(S[i]);if(window.gsap&&!matchMedia("(prefers-reduced-motion:reduce)").matches&&dir){gsap.fromTo(S[i],{x:dir*60,opacity:0},{x:0,opacity:1,duration:.55,ease:"power3.out",clearProps:"transform,opacity"})}}
 function cu(r){if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;r.querySelectorAll(".big:not(.nc)").forEach(function(e){var t=e.dataset.t||(e.dataset.t=e.textContent),m=t.match(/^([+]?)([\d,]+(?:\.\d+)?)(.*)$/);if(!m)return;var end=parseFloat(m[2].replace(/,/g,"")),dec=(m[2].split(".")[1]||"").length,t0=performance.now();(function f(n){var p=Math.min(1,(n-t0)/900),v=end*(1-Math.pow(1-p,3));e.textContent=m[1]+v.toLocaleString("en-US",{minimumFractionDigits:dec,maximumFractionDigits:dec})+m[3];if(p<1)requestAnimationFrame(f)})(t0)})}
 function tw(e,v){var a=parseFloat(e.textContent)||0,t0=performance.now();(function f(n){var p=Math.min(1,(n-t0)/450);e.textContent=(a+(v-a)*p).toFixed(2);if(p<1)requestAnimationFrame(f)})(t0)}
 document.addEventListener("click",function(e){var g=e.target.closest("[data-go]");if(g)show(+g.dataset.go)});
@@ -11,11 +11,27 @@ if(d>0&&i===S.length-1){if(window.Stage)Stage.curtain();return}
 if(n<0||n>=S.length)return;
 if(d>0&&window.Stage&&S[n].dataset.sp!==S[i].dataset.sp){Stage.handover(n);return}
 show(n,d)}
-window.Deck={show:show,go:go,S:S,get i(){return i}};
+/* fit to screen: one shared zoom so all slides look the same size; a slide only shrinks further if its own content needs it */
+var Z=0;
+function fitOn(){return innerWidth>=900&&innerHeight>=520&&CSS.supports("zoom","1")}
+function avail(){var m=$("main"),cs=getComputedStyle(m);return{w:m.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight),h:m.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom)}}
+function isFs(){return !!document.fullscreenElement||matchMedia("(display-mode:fullscreen)").matches}
+function sizeKey(){return innerWidth+"x"+innerHeight+(isFs()?"f":"")}
+function fitAll(){document.body.classList.toggle("fs",isFs());
+if(!fitOn()){fitAll.k=sizeKey();document.body.classList.remove("fit");S.forEach(function(s){s.style.zoom=""});Z=0;return}
+document.body.classList.add("fit");var a=avail(),mx=0;fitAll.k=sizeKey();
+S.forEach(function(s){var st=s.style,hid=!s.classList.contains("on");st.zoom="";if(hid){st.display="flow-root";st.visibility="hidden";st.position="absolute"}mx=Math.max(mx,s.offsetHeight);if(hid){st.display=st.visibility=st.position=""}});
+Z=Math.max(.6,Math.min(1.3,a.w/1000,(a.h-6)/mx));fitCur()}
+function fitCur(){if(fitAll.k!==sizeKey())return fitAll();if(!Z)return;var s=S[i],a=avail();s.style.zoom="";var h=s.offsetHeight;s.style.zoom=(Math.floor(Math.max(.55,Math.min(Z,(a.h-6)/h))*1000)/1000).toString()}
+var rf;addEventListener("resize",function(){clearTimeout(rf);rf=setTimeout(fitAll,80)});
+document.addEventListener("fullscreenchange",function(){setTimeout(fitAll,60)});
+$("main").addEventListener("click",function(){setTimeout(fitCur,30)});$("main").addEventListener("toggle",function(){setTimeout(fitCur,30)},true);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitAll);
+window.Deck={show:show,go:go,S:S,fit:fitAll,get i(){return i}};
 $("#nx").onclick=function(){go(1)};$("#pv").onclick=function(){go(-1)};
 document.addEventListener("keydown",function(e){if(e.target.closest&&e.target.closest("input,select,summary")||e.ctrlKey||e.metaKey||e.altKey)return;var k=e.key;
 if(window.Stage&&Stage.key(e))return;
-if(k==="ArrowRight"||k==="PageDown"||k===" "){e.preventDefault();go(1)}else if(k==="ArrowLeft"||k==="PageUp"){e.preventDefault();go(-1)}else if(k==="n"||k==="N")$("#nt").click()});
+if(k==="ArrowRight"||k==="PageDown"||k===" "){e.preventDefault();go(1)}else if(k==="ArrowLeft"||k==="PageUp"){e.preventDefault();go(-1)}else if(k==="n"||k==="N")$("#nt").click();else if(k==="f"||k==="F"){if(document.fullscreenElement)document.exitFullscreen();else if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen()}});
 function tog(id,b){var o=$(id).classList.toggle("on");$(b).setAttribute("aria-pressed",o)}
 $("#nt").onclick=function(){tog("#notes","#nt")};$("#qb").onclick=function(){tog("#qa","#qb")};
 $("#th").onclick=function(){var r=document.documentElement,d=r.dataset.theme==="dark"||(!r.dataset.theme&&matchMedia("(prefers-color-scheme:dark)").matches);r.dataset.theme=d?"light":"dark"};
@@ -81,4 +97,4 @@ tw($("#tot"),tot);$("#dl").textContent=(tot-base>=0?"+":"")+(tot-base).toFixed(2
 var m=Math.abs(tot-48.89)<.006?"Matches the report’s no-promotion total (48.89 M).":Math.abs(tot-61.72)<.006?"Matches the report’s every-weekday total (61.72 M).":Math.abs(tot-55.59)<.006?"Matches the report’s recent-schedule total (55.59 M): promotions on 10–14 and 24–28 Aug.":"Custom plan. The report ran three schedules: 48.89, 55.59 and 61.72 M. Saturdays and Sundays are not promoted; Sundays are mostly closed.";$("#rp").textContent=m}
 $("#cal").onclick=function(e){var b=e.target.closest("[data-d]");if(b){var dd=b.dataset.d;P[+dd]=!P[+dd];$$("[data-pr]").forEach(function(x){x.classList.remove("on")});cal();var nb=document.querySelector('#cal [data-d="'+dd+'"]');if(nb)nb.classList.add("fl")}};
 $$("[data-pr]").forEach(function(b){b.onclick=function(){pre(b.dataset.pr);cal()}});pre("rec");cal();
-show((parseInt((location.hash.match(/s-(\d+)/)||[0,1])[1],10)||1)-1);if(window.Stage)Stage.boot(startHash);
+fitAll();show((parseInt((location.hash.match(/s-(\d+)/)||[0,1])[1],10)||1)-1);if(window.Stage)Stage.boot(startHash);

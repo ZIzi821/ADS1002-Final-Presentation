@@ -121,7 +121,7 @@
       '<div class="st-title"><div class="kk">ADS1002 · Forecasting Rossmann Sales</div><h1>' + "Can historical sales data support a reliable four-week sales plan?".split(" ").map(function (w) { return "<span>" + w + "</span>"; }).join("") + '</h1></div>' +
       '<div class="st-team"><div class="hd">Meet the team</div><div class="sub">Five presenters · two slides each · one story from data to decision</div><div class="badges">' +
       PRES.map(function (p, k) { return '<div class="badge"><div class="bh"><span>STAFF</span><span>0' + (k + 1) + '</span></div><div class="hole"></div><div class="av" style="background:' + p.col + '">' + p.ini + '</div><div class="nm">' + p.name + '</div><div class="sl">' + p.slides + '</div><div class="rl">' + p.role + '</div><div class="bar"></div></div>'; }).join("") + '</div></div>' +
-      '<div class="st-hand"><div class="hand"><div class="no"></div><div class="kk">Next up</div><div class="nm"></div><div class="rl"></div><div class="ft"><kbd>→</kbd> continue · <kbd>←</kbd> back</div></div></div>' +
+      '<div class="st-hand"><div class="hp hp1"></div><div class="hp hp2"></div><svg class="rays" viewBox="-100 -100 200 200" aria-hidden="true">' + rays() + '</svg><div class="burst"></div><div class="hc"><div class="hno"></div><div class="hk">Next up</div><div class="hnm"></div><div class="hbar"></div><div class="hrl"></div></div><div class="hft"><kbd>→</kbd> continue · <kbd>←</kbd> back</div><div class="flash"></div></div>' +
       '<div class="st-curtain"><div class="rain"></div><p class="ty">Thank you</p><div class="tm">' + PRES.map(function (p) { return "<span>" + p.name + "</span>"; }).join("") + '</div>' +
       '<div class="qr"><span class="qrc"></span><span><b>Try the interactive slides</b>' + SITE.replace("https://", "") + '</span></div><div class="cr"></div></div>' +
       '<div class="st-wipe"><svg viewBox="0 0 120 100" style="position:absolute;right:-110px;top:50%;width:150px;margin-top:-62px"><path d="M6 14h18l14 52h56l12-38H32" fill="none" stroke="#fff" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><rect x="40" y="34" width="12" height="16" rx="2" fill="#f2a900"/><rect x="56" y="28" width="10" height="22" rx="2" fill="#4cc4b3"/><rect x="70" y="36" width="14" height="14" rx="3" fill="#fff"/><circle cx="46" cy="82" r="8" fill="#fff"/><circle cx="86" cy="82" r="8" fill="#fff"/></svg></div>' +
@@ -223,18 +223,66 @@
   function enterDeck() { nohint(); Music.stop(2.5); sweepTo(0); }
 
   /* ---------- handover ---------- */
+  function rays() {
+    var o = "";
+    for (var k = 0; k < 18; k++) { var a = k / 18 * Math.PI * 2, b = a + .07; o += '<polygon points="0,0 ' + (150 * Math.cos(a)).toFixed(1) + "," + (150 * Math.sin(a)).toFixed(1) + " " + (150 * Math.cos(b)).toFixed(1) + "," + (150 * Math.sin(b)).toFixed(1) + '" fill="#fff"/>'; }
+    return o;
+  }
+  var handTl = null;
+  function shake(t) { if (!RM) gsap.fromTo(t, { x: 0, y: 0 }, { keyframes: { x: [-22, 18, -14, 10, -6, 3, 0], y: [10, -12, 8, -5, 3, -1, 0] }, duration: .45, ease: "none" }); }
+  function burst() {
+    var box = $(".st-hand .burst"); box.innerHTML = ""; if (RM) return;
+    var r = rng(Date.now() & 0xffff);
+    for (var k = 0; k < 22; k++) {
+      var p = product(r, 2, 44), sv = document.createElementNS(NS, "svg"), ang = r() * Math.PI * 2, d = Math.min(innerWidth, innerHeight) * (.35 + r() * .45);
+      sv.setAttribute("viewBox", "0 0 30 50"); sv.setAttribute("width", 42); sv.setAttribute("height", 70); sv.innerHTML = p.svg; box.appendChild(sv);
+      gsap.fromTo(sv, { x: -21, y: -35, scale: .3, opacity: 1, rotation: 0 }, { x: Math.cos(ang) * d - 21, y: Math.sin(ang) * d - 35, scale: 1 + r() * .6, rotation: (r() - .5) * 720, opacity: 0, duration: 1 + r() * .5, ease: "power3.out" });
+    }
+  }
+  /* explosive presenter transition: colour panels slam in, flash, shake, number punch, name letters fly in */
   function handover(n) {
-    var sp = Deck.S[n].dataset.sp, k = PRES.map(function (p) { return p.name; }).indexOf(sp), p = PRES[k] || { name: sp, slides: "", role: "" };
-    pendingSlide = n; setMode("handover"); Music.sfx("whoosh");
-    $(".hand .no").textContent = "0" + (k + 1); $(".hand .nm").textContent = p.name; $(".hand .rl").textContent = p.slides + " · " + p.role;
-    gsap.fromTo($(".hand"), { x: 90, opacity: 0, rotation: 2 }, { x: 0, opacity: 1, rotation: 0, duration: RM ? 0 : .5, ease: "power3.out" });
+    var sp = Deck.S[n].dataset.sp, k = PRES.map(function (p) { return p.name; }).indexOf(sp), p = PRES[k] || { name: sp, slides: "", role: "", col: "#c8102e" };
+    pendingSlide = n; setMode("handover");
+    var h = $(".st-hand"), hc = $(".st-hand .hc"), no = $(".st-hand .hno"), nm = $(".st-hand .hnm");
+    h.style.setProperty("--pc", p.col);
+    no.textContent = "0" + (k + 1); $(".st-hand .hrl").textContent = p.slides + " · " + p.role;
+    nm.innerHTML = p.name.split("").map(function (c) { return "<span>" + (c === " " ? "&nbsp;" : c) + "</span>"; }).join("");
+    if (handTl) handTl.kill();
+    var rays = $(".st-hand .rays"), chars = $$(".st-hand .hnm span");
+    gsap.killTweensOf(rays);
+    gsap.set([hc, no], { clearProps: "all" });
+    if (RM) { gsap.set($$(".st-hand .hp"), { xPercent: 0 }); gsap.set([no, $(".st-hand .hk"), $(".st-hand .hrl"), $(".st-hand .hft")].concat(chars), { opacity: 1 }); gsap.set($(".st-hand .hbar"), { scaleX: 1 }); return; }
+    Music.sfx("whoosh");
+    handTl = gsap.timeline()
+      .fromTo($(".st-hand .hp1"), { xPercent: -115 }, { xPercent: 0, duration: .36, ease: "expo.out" }, 0)
+      .fromTo($(".st-hand .hp2"), { xPercent: 115 }, { xPercent: 0, duration: .36, ease: "expo.out" }, .05)
+      .call(function () { Music.sfx("boom"); shake(hc); burst(); }, null, .3)
+      .fromTo($$(".st-hand .hp"), { scale: 1.08 }, { scale: 1, duration: .5, ease: "power3.out" }, .3)
+      .fromTo($(".st-hand .flash"), { opacity: .9 }, { opacity: 0, duration: .5, ease: "power2.out" }, .3)
+      .fromTo(rays, { scale: .2, opacity: 0 }, { scale: 1, opacity: .14, duration: .7, ease: "power3.out" }, .3)
+      .fromTo(no, { scale: 3.4, opacity: 0, rotation: -14 }, { scale: 1, opacity: 1, rotation: 0, duration: .5, ease: "back.out(1.7)" }, .26)
+      .fromTo($(".st-hand .hk"), { x: -80, opacity: 0 }, { x: 0, opacity: 1, duration: .35, ease: "power3.out" }, .45)
+      .fromTo(chars, { yPercent: 130, opacity: 0, rotation: function () { return (Math.random() - .5) * 60; } }, { yPercent: 0, opacity: 1, rotation: 0, duration: .5, stagger: .035, ease: "back.out(2.4)" }, .5)
+      .call(function () { Music.sfx("hit"); }, null, .62)
+      .fromTo($(".st-hand .hbar"), { scaleX: 0 }, { scaleX: 1, duration: .55, ease: "expo.out" }, .8)
+      .fromTo($(".st-hand .hrl"), { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: .4 }, .9)
+      .fromTo($(".st-hand .hft"), { opacity: 0 }, { opacity: 1, duration: .4 }, 1.2)
+      .to(no, { scale: 1.05, duration: .9, yoyo: true, repeat: -1, ease: "sine.inOut" }, 1.3);
+    gsap.fromTo(rays, { rotation: 0 }, { rotation: 360, duration: 26, ease: "none", repeat: -1 });
   }
   function closeHand(go) {
     var n = pendingSlide; pendingSlide = null;
     if (mode !== "handover" || n == null) return;
     mode = "closing"; Stage.active = false;
+    if (handTl) handTl.kill();
     if (go) Deck.show(n, 1);
-    gsap.to($(".hand"), { x: go ? -90 : 90, opacity: 0, duration: RM ? 0 : .3, ease: "power2.in", onComplete: function () { if (mode === "closing") setMode(null); } });
+    if (RM) { setMode(null); return; }
+    Music.sfx("whoosh");
+    gsap.timeline({ onComplete: function () { gsap.killTweensOf($(".st-hand .rays")); if (mode === "closing") setMode(null); } })
+      .to($(".st-hand .hc"), { scale: go ? 1.7 : .6, opacity: 0, duration: .32, ease: "power2.in" }, 0)
+      .to([$(".st-hand .rays"), $(".st-hand .hft")], { opacity: 0, duration: .2 }, 0)
+      .to($(".st-hand .hp1"), { xPercent: -115, duration: .5, ease: "power4.in" }, .08)
+      .to($(".st-hand .hp2"), { xPercent: 115, duration: .5, ease: "power4.in" }, .08);
   }
 
   /* ---------- curtain call ---------- */
